@@ -12,8 +12,17 @@ export const NavBar = () => {
       
       <div>
         <NavLink to='/' className={navLinkCLasses}>
-          Home
+          Home  
         </NavLink>
+         
+        <NavLink to='/about' className={navLinkCLasses}>  
+          About
+        </NavLink>
+        <NavLink to='/contact' className={navLinkCLasses}>  
+          Contact
+        </NavLink>
+        
+        
       </div>
     </nav>
   );

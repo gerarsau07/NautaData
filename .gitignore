@@ -1,0 +1,7 @@
+# Windows system files
+desktop.ini
+Thumbs.db
+$RECYCLE.BIN/
+
+# Mac system files (por si colaboras con alguien que use Mac)
+.DS_Store
