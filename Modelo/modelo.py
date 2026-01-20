@@ -14,7 +14,7 @@ import warnings
 
 
 def load_and_prepare_data(training_csv_path='03_IBD_GTstudentproject_train.csv'):
-    print(f"Cargando datasets y archivo de entrenamiento: '{training_csv_path}'...")
+    print(f"Cargando datasets y archivo de entrenamiento: '{training_csv_path}'")
     diatom_inventories = pd.read_csv('01_DiatomInventories_GTstudentproject_B.csv')
     sites_info = pd.read_csv('02_InfoSites_GTstudentproject_B.csv')
     try:
@@ -42,7 +42,7 @@ def main():
     if df is None:
         return
 
-    print("Preparando datos para el entrenamiento final...")
+    print("Preparando datos para el entrenamiento final.")
     exclude_cols = ['SamplingOperations_code', 'CodeSite_SamplingOperations', 'IBD', 'IBD_EQR', 'IBD_EQR_Status', 'CodeSite']
     X = df.drop(columns=[col for col in exclude_cols if col in df.columns], errors='ignore')
     y_reg = df['IBD_EQR']
@@ -86,18 +86,18 @@ def main():
         ('stacking', stacking_regressor_base)
     ])
 
-    print("\n  INICIANDO ENTRENAMIENTO FINAL (ETAPA 1/2)")
+    print("\n  INICIANDO ENTRENAMIENTO FINAL ")
     assistant_pipeline_final = clone(assistant_pipeline_base)
     assistant_pipeline_final.fit(X, y_reg)
     print("Asistente (Etapa 1) entrenado.")
 
-    print("Generando meta-característica para la Etapa 2...")
+    print("Generando meta-característica para la Etapa 2")
     y_pred_reg_assistant_full = assistant_pipeline_final.predict(X)
     X_enhanced_full = X.copy()
     X_enhanced_full["eqr_pred_assistant"] = y_pred_reg_assistant_full
     train_columns_final = X_enhanced_full.columns.tolist()
 
-    print("\n  INICIANDO ENTRENAMIENTO FINAL (ETAPA 2/2) ")
+    print("\n  INICIANDO ENTRENAMIENTO FINAL")
     final_pipeline_final = clone(final_pipeline_base)
     final_pipeline_final.fit(X_enhanced_full, y_reg)
     print("Comité de expertos (Etapa 2) entrenado.")
