@@ -1,42 +1,56 @@
-# 🌊 NautaData
+NautaData: Monitoreo Ecológico de la Calidad del Agua 🌊🔬
 
-> Visualización y procesamiento de modelos de Machine Learning en el navegador utilizando **WebGPU** para aceleración de hardware.
+Este repositorio contiene el ecosistema de procesamiento de datos y modelos de aprendizaje automático diseñados para la evaluación de la calidad ecológica del agua. El proyecto utiliza indicadores biológicos (diatomeas) y parámetros físico-químicos para predecir el índice IBD (Índice Biológico de Diatomeas) y el estatus EQR (Ecological Quality Ratio).
+ Descripción del Proyecto
 
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Status](https://img.shields.io/badge/status-development-orange)
-![Tech](https://img.shields.io/badge/stack-Vite_React_WebGPU-purple)
+NautaData implementa un pipeline avanzado de Ciencia de Datos para automatizar la clasificación del estado ecológico de los cuerpos de agua, dividiéndolos en cinco categorías: Bad, Poor, Moderate, Good y High.
 
-## 📖 Sobre el Proyecto
+El modelo destaca por su arquitectura de dos etapas, diseñada para capturar la naturaleza ordinal de los datos biológicos y optimizar la precisión en clases desbalanceadas.
+Características Técnicas
 
-**NautaData** es una aplicación web de alto rendimiento diseñada para ejecutar inferencia de modelos de Inteligencia Artificial directamente en el cliente (Client-Side). 
+    Arquitectura de Modelado:
 
-A diferencia de las soluciones tradicionales que procesan datos en el servidor, este proyecto utiliza **WebGPU** para acceder a la tarjeta gráfica del usuario, permitiendo cálculos de tensores y visualizaciones en tiempo real con latencia mínima.
+        Etapa 1 (Asistente Ordinal): Un CatBoostRegressor optimizado con función de pérdida MAE para entender la jerarquía entre los estados de calidad.
 
-### Características Principales
-* 🚀 **Zero-Server Inference:** El modelo corre 100% en el navegador.
-* ⚡ **WebGPU Accelerated:** Uso de *Compute Shaders* para operaciones matemáticas pesadas.
-* 🎨 **UI Moderna:** Interfaz construida con Tailwind CSS v4 y React.
-* 🛠 **Arquitectura Modular:** Separación estricta entre lógica de UI (React) y lógica de Renderizado/ML (Core).
+        Etapa 2 (Comité de Expertos): Un StackingRegressor que integra LightGBM, Random Forest, Ridge y CatBoost para refinar la predicción numérica.
 
-## 🛠 Tech Stack
+    Optimización de Umbrales: Implementación de búsqueda de umbrales dinámicos para maximizar el F1-Macro, mejorando el reconocimiento de clases minoritarias (Bad/Poor).
 
-* **Core:** [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-* **Build Tool:** [Vite](https://vitejs.dev/) + [SWC](https://swc.rs/) (Rust-based compiler)
-* **Estilos:** [Tailwind CSS v4](https://tailwindcss.com/)
-* **Gráficos/ML:** WebGPU API + [LiteRT](https://github.com/tensorflow/tfjs) (o ONNX Runtime)
-* **Routing:** React Router v6
+    Validación Robusta: Uso de StratifiedGroupKFold para evitar la fuga de datos por sitios de muestreo repetidos.
 
-## 📂 Arquitectura del Proyecto
+    Ingeniería de Características: Pivotado automático de inventarios taxonómicos y enriquecimiento de metadatos geográficos.
 
-El proyecto sigue una arquitectura de separación de intereses para mantener el rendimiento alto:
+Estructura del Repositorio
 
-```text
-src/
-├── core/           # 🧠 Lógica Pura (No-React)
-│   ├── webgpu/     # Configuración de adaptadores y pipelines WebGPU
-│   └── ml/         # Carga e inferencia del modelo (TFLite/ONNX)
-├── components/     # 🧩 Interfaz de Usuario (React)
-│   ├── layout/     # Navbar, Wrappers
-│   └── viewer/     # Canvas y controladores de vista
-├── pages/          # 📄 Vistas principales (Rutas)
-└── hooks/          # 🪝 Puentes entre React y el Core (useGPU, useModel)
+    data/: (Opcional si los tienes ahí) Archivos CSV con inventarios de diatomeas e información de sitios.
+
+    scripts/: Scripts de entrenamiento y evaluación del modelo.
+
+    models/: Modelos entrenados guardados en formato .pkl.
+
+    notebooks/: Análisis exploratorio de datos (EDA) y visualizaciones.
+
+Visualización de Datos
+
+El proyecto incluye análisis estadísticos profundos, como la distribución de los índices mediante diagramas de caja (Boxplots) para identificar valores atípicos y el sesgo de las clases biológicas.
+💻 Instalación y Uso
+
+    Clonar el repositorio:
+    Bash
+
+    git clone https://github.com/gerarsau07/NautaData.git
+    cd NautaData
+
+    Instalar dependencias:
+    Bash
+
+    pip install pandas numpy scikit-learn lightgbm catboost joblib matplotlib seaborn imbalanced-learn
+
+    Entrenar el modelo: Ejecuta el script principal para procesar los datos y generar el modelo optimizado:
+    Bash
+
+    python modelo.py
+
+Conclusiones del Modelo
+
+Actualmente, el modelo alcanza un Accuracy superior al 92% en datos no vistos, con un enfoque especial en reducir la confusión entre clases adyacentes (como Moderate y Good) mediante el ajuste fino de fronteras de decisión.
